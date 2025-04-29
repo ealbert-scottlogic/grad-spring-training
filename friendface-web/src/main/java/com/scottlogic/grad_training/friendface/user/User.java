@@ -1,8 +1,10 @@
 package com.scottlogic.grad_training.friendface.user;
 
+import com.scottlogic.grad_training.friendface.post.Post;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 @Table(name="users")

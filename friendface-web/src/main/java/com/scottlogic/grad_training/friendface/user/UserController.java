@@ -18,10 +18,14 @@ public class UserController {
   public UserController(UserService userService){
     this.userService = userService;
   }
-  @PostMapping
+  @PostMapping("/createUser")
   public ResponseEntity<User> createUser(String username, String password){
     User user = userService.createUser(username,password);
-    return new ResponseEntity<>(user, HttpStatus.OK);
-  }
+    if(user != null){
+      return new ResponseEntity<>(user, HttpStatus.OK);
+    }else {
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 
+  }
 }

@@ -12,9 +12,16 @@ public class UserService {
     this.userRepository = userRepository;
   }
   public User createUser(String username, String password){
+    if(!userRepository.findByUsername(username).isEmpty()){
+      return null;
+    }
     String hashedPassword = encoder.encode(password);
     User user = new User(username, hashedPassword);
     userRepository.save(user);
     return user;
+  }
+
+  public User getUserById(int userID){
+    return userRepository.getReferenceById(userID);
   }
 }
