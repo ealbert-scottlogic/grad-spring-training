@@ -5,6 +5,7 @@ import com.scottlogic.grad_training.friendface.user.UserService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,5 +24,9 @@ public class PostController {
   public ResponseEntity<Post> createPost(int author_id, String content){
       Post post = postService.createPost(author_id, content);
       return new ResponseEntity<>(post,HttpStatus.OK);
+  }
+  @GetMapping("/teapot")
+  public ResponseEntity<String> teapot(){
+    return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
   }
 }

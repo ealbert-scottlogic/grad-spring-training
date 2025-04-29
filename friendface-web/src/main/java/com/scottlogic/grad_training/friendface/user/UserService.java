@@ -1,13 +1,23 @@
 package com.scottlogic.grad_training.friendface.user;
 
+import com.scottlogic.grad_training.friendface.Sessions.Session;
+import com.scottlogic.grad_training.friendface.Sessions.SessionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+
 @Service
 public class UserService {
+  private final SessionService sessionService;
   private final PasswordEncoder encoder;
   private final UserRepository userRepository;
-  public UserService(PasswordEncoder encoder, UserRepository userRepository){
+  public UserService(SessionService sessionService,
+                     PasswordEncoder encoder,
+                     UserRepository userRepository){
+    this.sessionService = sessionService;
     this.encoder = encoder;
     this.userRepository = userRepository;
   }
@@ -23,5 +33,17 @@ public class UserService {
 
   public User getUserById(int userID){
     return userRepository.getReferenceById(userID);
+  }
+
+  public Session attemptLogin(String username, String password) {
+    List<User> response = userRepository.findByUsername(username);
+    if(response.isEmpty()){
+      return null;
+    }
+    User user = response.getFirst();
+    if(encoder.matches(password, user.getPassword())){
+      return sessionService.createSession(user);
+    }
+    return null;
   }
 }
