@@ -26,7 +26,7 @@ public class PostController {
       if(post == null){
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
       }
-      return new ResponseEntity<>(post,HttpStatus.OK);
+      return new ResponseEntity<>(post,HttpStatus.CREATED);
   }
   @GetMapping("/teapot")
   public ResponseEntity<String> teapot(){

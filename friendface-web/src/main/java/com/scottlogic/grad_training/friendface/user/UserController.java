@@ -25,7 +25,7 @@ public class UserController {
   public ResponseEntity<User> createUser(String username, String password) {
     User user = userService.createUser(username, password);
     if (user != null) {
-      return new ResponseEntity<>(user, HttpStatus.OK);
+      return new ResponseEntity<>(user, HttpStatus.CREATED);
     } else {
       return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
