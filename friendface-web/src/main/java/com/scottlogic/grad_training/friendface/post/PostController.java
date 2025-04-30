@@ -20,9 +20,12 @@ public class PostController {
     this.postService = postService;
   }
 
-  @PostMapping("/createPost")
-  public ResponseEntity<Post> createPost(int author_id, String content){
-      Post post = postService.createPost(author_id, content);
+  @PostMapping("/create")
+  public ResponseEntity<Post> createPost(String sessionToken, String content){
+      Post post = postService.createPost(sessionToken, content);
+      if(post == null){
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+      }
       return new ResponseEntity<>(post,HttpStatus.OK);
   }
   @GetMapping("/teapot")
@@ -35,7 +38,7 @@ public class PostController {
     if(post != null){
       return new ResponseEntity<>(post.content, HttpStatus.OK);
     }else{
-      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
   }
 }

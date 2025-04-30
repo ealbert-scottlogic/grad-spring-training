@@ -45,13 +45,15 @@ public class PostService {
     }
     return null;
   }
-  public Post createPost(Integer authorId, String content){
-    User user = userService.getUserById(authorId);
+  public Post createPost(String sessionToken, String content){
+    User user = sessionService.validateSession(sessionToken);
+    if(user == null){
+      return null;
+    }
     Post post = new Post(content, user);
     LocalDateTime date = LocalDateTime.now();
     post.setDate(date);
     postRepository.save(post);
-
     return post;
   }
 }
