@@ -34,13 +34,14 @@ public class PostService {
     if(postRepository.existsById(postId)){
       Post post = postRepository.getReferenceById(postId);
       User user = sessionService.validateSession(sessionToken);
-      if(user != null){
-        if (post.getAuthor().equals(user)){
-          post.setDate(LocalDateTime.now());
-          post.setContent(content);
-          postRepository.save(post);
-          return post;
-        }
+      if(user == null){
+        return null;
+      }
+      if (post.getAuthor().equals(user)){
+        post.setDate(LocalDateTime.now());
+        post.setContent(content);
+        postRepository.save(post);
+        return post;
       }
     }
     return null;
@@ -55,5 +56,24 @@ public class PostService {
     post.setDate(date);
     postRepository.save(post);
     return post;
+  }
+
+  public int deletePost(Integer postId, String sessionToken) {
+    User user = sessionService.validateSession(sessionToken);
+    if(user == null){
+      // Session token does not exist
+      return 428;
+    }
+    if(!postRepository.existsById(postId)){
+      // Post not found
+      return 404;
+    }
+    Post post = postRepository.getReferenceById(postId);
+    if(post.getAuthor().getId() == user.getId()){
+      postRepository.delete(post);
+      return 200;
+    }
+    // Post id and user id do not match up
+    return 401;
   }
 }

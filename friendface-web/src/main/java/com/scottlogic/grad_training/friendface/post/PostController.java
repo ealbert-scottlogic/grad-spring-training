@@ -41,4 +41,14 @@ public class PostController {
       return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
   }
+  @PostMapping("/delete")
+  public ResponseEntity<String> deletePost(Integer postId, String sessionToken){
+    int response = postService.deletePost(postId, sessionToken);
+    return switch (response) {
+      case 428 -> new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
+      case 404 -> new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      case 401 -> new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+      default -> new ResponseEntity<>(HttpStatus.OK);
+    };
+  }
 }
