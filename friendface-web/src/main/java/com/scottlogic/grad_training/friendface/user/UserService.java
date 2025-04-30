@@ -2,6 +2,8 @@ package com.scottlogic.grad_training.friendface.user;
 
 import com.scottlogic.grad_training.friendface.Sessions.Session;
 import com.scottlogic.grad_training.friendface.Sessions.SessionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,52 +23,52 @@ public class UserService {
     this.encoder = encoder;
     this.userRepository = userRepository;
   }
-  public User createUser(String username, String password){
+  public ResponseEntity<User> createUser(String username, String password){
     if(!userRepository.findByUsername(username).isEmpty()){
-      return null;
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
     String hashedPassword = encoder.encode(password);
     User user = new User(username, hashedPassword);
     userRepository.save(user);
-    return user;
+    return new ResponseEntity<>(user, HttpStatus.CREATED);
   }
 
   public User getUserById(int userID){
     return userRepository.getReferenceById(userID);
   }
 
-  public Session attemptLogin(String username, String password) {
+  public ResponseEntity<Session> attemptLogin(String username, String password) {
     List<User> response = userRepository.findByUsername(username);
     if(response.isEmpty()){
-      return null;
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     User user = response.getFirst();
     if(encoder.matches(password, user.getPassword())){
-      return sessionService.createSession(user);
+      return new ResponseEntity<>(sessionService.createSession(user), HttpStatus.CREATED);
     }
-    return null;
+    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }
 
-  public int changeUsername(String username, String sessionToken) {
+  public ResponseEntity<String> changeUsername(String username, String sessionToken) {
     User user = sessionService.validateSession(sessionToken);
     if(user == null){
       // Session token does not exist
-      return 428;
+      return new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
     }
     if(!userRepository.findByUsername(username).isEmpty()){
-      return 409;
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
     user.setUsername(username);
     userRepository.save(user);
-    return 200;
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  public int deleteUser(String sessionToken) {
+  public ResponseEntity<String> deleteUser(String sessionToken) {
     User user = sessionService.validateSession(sessionToken);
     if(user == null){
-      return 428;
+      return new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
     }
     userRepository.delete(user);
-    return 200;
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

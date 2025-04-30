@@ -23,37 +23,19 @@ public class UserController {
 
   @PostMapping("/createUser")
   public ResponseEntity<User> createUser(String username, String password) {
-    User user = userService.createUser(username, password);
-    if (user != null) {
-      return new ResponseEntity<>(user, HttpStatus.CREATED);
-    } else {
-      return new ResponseEntity<>(HttpStatus.CONFLICT);
-    }
+    return userService.createUser(username, password);
   }
   @PostMapping("/deleteAccount")
   public ResponseEntity<String> deleteUser(String sessionToken){
-    int response = userService.deleteUser(sessionToken);
-    return switch (response) {
-      case 428 -> new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
-      default -> new ResponseEntity<>(HttpStatus.OK);
-    };
+    return userService.deleteUser(sessionToken);
   }
   @PostMapping("/changeUsername")
   public ResponseEntity<String> changeUsername(String username, String sessionToken){
-    int response = userService.changeUsername(username,sessionToken);
-    return switch (response) {
-      case 428 -> new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
-      case 409 -> new ResponseEntity<>(HttpStatus.CONFLICT);
-      default -> new ResponseEntity<>(HttpStatus.OK);
-    };
+    return userService.changeUsername(username, sessionToken);
   }
 
   @PostMapping("/login")
   public ResponseEntity<Session> attemptLogin(String username, String password) {
-    Session session = userService.attemptLogin(username, password);
-    if (session != null) {
-      return new ResponseEntity<>(session, HttpStatus.OK);
-    }
-    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    return userService.attemptLogin(username,password);
   }
 }
