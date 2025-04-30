@@ -46,4 +46,27 @@ public class UserService {
     }
     return null;
   }
+
+  public int changeUsername(String username, String sessionToken) {
+    User user = sessionService.validateSession(sessionToken);
+    if(user == null){
+      // Session token does not exist
+      return 428;
+    }
+    if(!userRepository.findByUsername(username).isEmpty()){
+      return 409;
+    }
+    user.setUsername(username);
+    userRepository.save(user);
+    return 200;
+  }
+
+  public int deleteUser(String sessionToken) {
+    User user = sessionService.validateSession(sessionToken);
+    if(user == null){
+      return 428;
+    }
+    userRepository.delete(user);
+    return 200;
+  }
 }

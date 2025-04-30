@@ -30,6 +30,23 @@ public class UserController {
       return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
   }
+  @PostMapping("/deleteAccount")
+  public ResponseEntity<String> deleteUser(String sessionToken){
+    int response = userService.deleteUser(sessionToken);
+    return switch (response) {
+      case 428 -> new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
+      default -> new ResponseEntity<>(HttpStatus.OK);
+    };
+  }
+  @PostMapping("/changeUsername")
+  public ResponseEntity<String> changeUsername(String username, String sessionToken){
+    int response = userService.changeUsername(username,sessionToken);
+    return switch (response) {
+      case 428 -> new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
+      case 409 -> new ResponseEntity<>(HttpStatus.CONFLICT);
+      default -> new ResponseEntity<>(HttpStatus.OK);
+    };
+  }
 
   @PostMapping("/login")
   public ResponseEntity<Session> attemptLogin(String username, String password) {
