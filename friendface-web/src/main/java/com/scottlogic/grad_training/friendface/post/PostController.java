@@ -29,4 +29,13 @@ public class PostController {
   public ResponseEntity<String> teapot(){
     return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
   }
+  @PostMapping("/edit")
+  public ResponseEntity<String> editPost(Integer postId, String content, String sessionToken){
+    Post post = postService.editPost(postId, content,sessionToken);
+    if(post != null){
+      return new ResponseEntity<>(post.content, HttpStatus.OK);
+    }else{
+      return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+  }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class SessionService {
@@ -26,5 +27,13 @@ public class SessionService {
     Session session = new Session(user, generateToken(), LocalDateTime.now());
     sessionRepository.save(session);
     return session;
+  }
+  //TODO add some time based validation to check if the session token has lapsed
+  public User validateSession(String sessionToken){
+    List<Session> response = sessionRepository.findBySessionToken(sessionToken);
+    if(!response.isEmpty()){
+      return response.getFirst().getUser();
+    }
+    return null;
   }
 }

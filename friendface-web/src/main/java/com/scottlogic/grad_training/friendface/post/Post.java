@@ -14,6 +14,7 @@ public class Post {
   @Column
   @Id
   int id;
+
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @ManyToOne
   @JoinColumn(name="author_id", nullable = false)

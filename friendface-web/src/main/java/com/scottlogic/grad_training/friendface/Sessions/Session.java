@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="sessions")
 public class Session {
-
   @OneToOne
   @JoinColumn(name="userId", nullable = false)
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   User user;
   @Id
   @Column
@@ -27,6 +27,7 @@ public class Session {
     this.sessionToken = sessionToken;
     this.lastLogin = lastLogin;
   }
+
 
   public User getUser() {
     return user;
