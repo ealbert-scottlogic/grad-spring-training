@@ -54,4 +54,12 @@ public class LikeService {
       return new ResponseEntity<>(likeRepository.findByPostId(postId).size(), HttpStatus.OK);
     }
   }
+
+  public ResponseEntity<List<Integer>> getUserLikes(int postId) {
+    if(!postRepository.existsById(postId)){
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }else{
+      return new ResponseEntity<>(likeRepository.findUserIdByPostId(postId), HttpStatus.OK);
+    }
+  }
 }
