@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface LikeRepository extends JpaRepository<Like, Integer> {
   public List<Like> findByPostIdAndUserId(int postId, int userId);
+  public List<Like> findByPostId(int postId);
 }

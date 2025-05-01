@@ -4,6 +4,9 @@ import com.scottlogic.grad_training.friendface.Sessions.SessionService;
 import com.scottlogic.grad_training.friendface.post.Post;
 import com.scottlogic.grad_training.friendface.post.PostRepository;
 import com.scottlogic.grad_training.friendface.user.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +24,11 @@ public class LikeService {
     this.likeRepository = likeRepository;
   }
 
-  public int like(String sessionToken, int postId) {
+  public ResponseEntity<String> like(String sessionToken, int postId) {
     User user = sessionService.validateSession(sessionToken);
     if(user == null){
       // No session token for user
-      return 428;
+      return new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
     }
     if(postRepository.existsById(postId)){
       Post post = postRepository.getReferenceById(postId);
@@ -33,14 +36,22 @@ public class LikeService {
       if(!likes.isEmpty()){
         // Send ok if like entry deleted
         likeRepository.delete(likes.getFirst());
-        return 200;
+        return new ResponseEntity<>(HttpStatus.OK);
       }else{
         // Send created if like entry created
         likeRepository.save(new Like(post,user));
-        return 201;
+        return new ResponseEntity<>(HttpStatus.CREATED);
       }
     }
     // post not found
-    return 404;
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  }
+
+  public ResponseEntity<Integer> getLikes(int postId) {
+    if(!postRepository.existsById(postId)){
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }else{
+      return new ResponseEntity<>(likeRepository.findByPostId(postId).size(), HttpStatus.OK);
+    }
   }
 }

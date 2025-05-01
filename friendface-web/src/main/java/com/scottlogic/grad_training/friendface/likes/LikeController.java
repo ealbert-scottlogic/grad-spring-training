@@ -17,12 +17,11 @@ public class LikeController {
 
   @PostMapping("/like")
   public ResponseEntity<String> likePost(String sessionToken, int postId){
-    int response = likeService.like(sessionToken, postId);
-    return switch (response) {
-      case 428 -> new ResponseEntity<>(HttpStatus.PRECONDITION_REQUIRED);
-      case 200 -> new ResponseEntity<>(HttpStatus.OK);
-      case 201 -> new ResponseEntity<>(HttpStatus.CREATED);
-      default -> new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    };
+    return likeService.like(sessionToken,postId);
+  }
+
+  @PostMapping("/getLikes")
+  public ResponseEntity<Integer> getLikes(int postId){
+    return likeService.getLikes(postId);
   }
 }
