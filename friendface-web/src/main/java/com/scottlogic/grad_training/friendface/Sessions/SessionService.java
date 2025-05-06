@@ -15,8 +15,16 @@ public class SessionService {
   private static final SecureRandom securerandom = new SecureRandom();
   private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder().withoutPadding();
 
+
   public SessionService(SessionRepository sessionRepository) {
     this.sessionRepository = sessionRepository;
+  }
+  public Session SessionExists(User user){
+    List<Session> response = this.sessionRepository.findByUserId(user.getId());
+    if(response.isEmpty()){
+      return null;
+    }
+    return response.getFirst();
   }
   public static String generateToken(){
     byte[] randomBytes = new byte[32];

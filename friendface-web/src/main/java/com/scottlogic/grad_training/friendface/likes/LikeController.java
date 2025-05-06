@@ -24,11 +24,15 @@ public class LikeController {
 
   @PostMapping("/getLikes")
   public ResponseEntity<Integer> getLikes(int postId){
-    return likeService.getLikes(postId);
+    return likeService.getPostLikes(postId);
   }
 
   @PostMapping("/getUserLikes")
   public ResponseEntity<List<Integer>> getUserLikes(int postId){
     return likeService.getUserLikes(postId);
+  }
+  @PostMapping("/getTotalUserLikes")
+  public ResponseEntity<Integer> getTotalUserLikes(int userID){
+    return new ResponseEntity<>(likeService.getTotalUserLikes(userID), HttpStatus.OK);
   }
 }

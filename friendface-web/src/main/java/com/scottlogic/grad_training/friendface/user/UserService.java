@@ -37,14 +37,20 @@ public class UserService {
     return userRepository.getReferenceById(userID);
   }
 
-  public ResponseEntity<Session> attemptLogin(String username, String password) {
+  public ResponseEntity<String> attemptLogin(String username, String password) {
     List<User> response = userRepository.findByUsername(username);
     if(response.isEmpty()){
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     User user = response.getFirst();
     if(encoder.matches(password, user.getPassword())){
-      return new ResponseEntity<>(sessionService.createSession(user), HttpStatus.CREATED);
+      //Do a lookup to see if a token already exists
+      Session sessionResponse = sessionService.SessionExists(user);
+      if(sessionResponse == null){
+        return new ResponseEntity<>(sessionService.createSession(user).getSessionToken(), HttpStatus.CREATED);
+      }else{
+        return new ResponseEntity<>(sessionResponse.getSessionToken(), HttpStatus.OK);
+      }
     }
     return new ResponseEntity<>(HttpStatus.FORBIDDEN);
   }

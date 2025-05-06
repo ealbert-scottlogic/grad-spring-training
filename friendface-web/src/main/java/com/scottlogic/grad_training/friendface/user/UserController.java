@@ -22,8 +22,8 @@ public class UserController {
   }
 
   @PostMapping("/createUser")
-  public ResponseEntity<User> createUser(String username, String password) {
-    return userService.createUser(username, password);
+  public ResponseEntity<User> createUser(@RequestBody LoginRequestDTO loginDetails) {
+    return userService.createUser(loginDetails.getUsername(),loginDetails.getPassword());
   }
   @PostMapping("/deleteAccount")
   public ResponseEntity<String> deleteUser(String sessionToken){

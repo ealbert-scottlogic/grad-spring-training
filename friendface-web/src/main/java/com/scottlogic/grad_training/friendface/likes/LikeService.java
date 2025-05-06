@@ -5,7 +5,6 @@ import com.scottlogic.grad_training.friendface.post.Post;
 import com.scottlogic.grad_training.friendface.post.PostRepository;
 import com.scottlogic.grad_training.friendface.user.User;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +46,7 @@ public class LikeService {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  public ResponseEntity<Integer> getLikes(int postId) {
+  public ResponseEntity<Integer> getPostLikes(int postId) {
     if(!postRepository.existsById(postId)){
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }else{
@@ -61,5 +60,10 @@ public class LikeService {
     }else{
       return new ResponseEntity<>(likeRepository.findUserIdByPostId(postId), HttpStatus.OK);
     }
+  }
+
+  public int getTotalUserLikes(int userId){
+    //TODO add some error handling stuff to this section
+    return likeRepository.findTotalUserLikes(userId);
   }
 }

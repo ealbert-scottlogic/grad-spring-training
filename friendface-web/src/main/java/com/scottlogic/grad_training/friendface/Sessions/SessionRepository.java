@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Integer> {
   List<Session> findBySessionToken(String session_token);
+  List<Session> findByUserId(int  user_id);
 }
