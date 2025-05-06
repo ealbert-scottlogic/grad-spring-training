@@ -52,4 +52,8 @@ public class Post {
   public void setDate(LocalDateTime date) {
     this.date = date;
   }
+
+  public int getId() {
+    return id;
+  }
 }

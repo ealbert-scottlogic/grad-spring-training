@@ -4,6 +4,9 @@ import com.scottlogic.grad_training.friendface.Sessions.Session;
 import com.scottlogic.grad_training.friendface.Sessions.SessionService;
 import com.scottlogic.grad_training.friendface.user.User;
 import com.scottlogic.grad_training.friendface.user.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -11,7 +14,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PostService {
@@ -75,5 +80,8 @@ public class PostService {
     }
     // Post id and user id do not match up
     return 401;
+  }
+  public ResponseEntity<List<PostDTO>> getAllPosts() {
+    return new ResponseEntity<>(postRepository.getAllPosts(), HttpStatus.OK);
   }
 }
