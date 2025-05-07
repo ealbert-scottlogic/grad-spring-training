@@ -38,10 +38,19 @@ public class SessionService {
   }
   //TODO add some time based validation to check if the session token has lapsed
   public User validateSession(String sessionToken){
-    List<Session> response = sessionRepository.findBySessionToken(sessionToken);
-    if(!response.isEmpty()){
-      return response.getFirst().getUser();
+    Session response = sessionRepository.findBySessionToken(sessionToken)
+            .orElse(null);
+    if(response !=null){
+      return response.getUser();
     }
     return null;
+  }
+
+  public void deleteToken(String sessionToken) {
+    Session response = sessionRepository.findBySessionToken(sessionToken)
+            .orElse(null);
+    if(response != null){
+      sessionRepository.delete(response);
+    }
   }
 }

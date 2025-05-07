@@ -17,7 +17,10 @@ public class UserController {
   public UserController(UserService userService) {
     this.userService = userService;
   }
-
+  @DeleteMapping("/logout")
+  public ResponseEntity<Boolean> logout(@RequestBody String sessionToken){
+    return userService.logout(sessionToken);
+  }
   @PostMapping("/createUser")
   public ResponseEntity<User> createUser(@RequestBody LoginRequestDTO loginDetails) {
     return userService.createUser(loginDetails.getUsername(),loginDetails.getPassword());
