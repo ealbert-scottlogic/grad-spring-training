@@ -5,10 +5,7 @@ import com.scottlogic.grad_training.friendface.user.UserService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -26,12 +23,12 @@ public class PostController {
     return postService.getAllPosts();
   }
   @PostMapping("/create")
-  public ResponseEntity<Post> createPost(String sessionToken, String content){
-      Post post = postService.createPost(sessionToken, content);
+  public ResponseEntity<Post> createPost(@RequestBody PostReciverDTO postInfo){
+      Post post = postService.createPost(postInfo.getSessionToken(), postInfo.getContent());
       if(post == null){
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
       }
-      return new ResponseEntity<>(post,HttpStatus.CREATED);
+      return new ResponseEntity<>(HttpStatus.CREATED);
   }
   @GetMapping("/teapot")
   public ResponseEntity<String> teapot(){
